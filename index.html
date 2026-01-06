@@ -11,19 +11,19 @@
       font-family: sans-serif;
     }
 
-    /* GRID */
+    /* IMAGE GRID */
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-gap: 10px;
+      gap: 10px;
       padding: 10px;
     }
 
     .grid img {
       width: 100%;
       cursor: pointer;
-      object-fit: cover;
       border: 2px solid white;
+      object-fit: cover;
     }
 
     /* FULLSCREEN OVERLAY */
@@ -40,19 +40,40 @@
       z-index: 999;
     }
 
-    .overlay iframe {
-      width: 80vw;
-      height: 45vw;
-      max-height: 80vh;
-    }
-
     .close {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 30px;
       color: white;
       font-size: 30px;
       cursor: pointer;
+      z-index: 1000;
+    }
+
+    /* CONTENT AREA */
+    .content {
+      width: 80vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      color: white;
+    }
+
+    iframe {
+      width: 100%;
+      height: 45vw;
+      max-height: 70vh;
+    }
+
+    /* DIARY */
+    .diary img {
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .diary p {
+      font-size: 14px;
+      opacity: 0.7;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -61,39 +82,65 @@
 
   <!-- IMAGE GRID -->
   <div class="grid">
-    <img src="images/1.jpg" onclick="openVideo('VIDEO_ID_1')">
-    <img src="images/2.jpg" onclick="openVideo('VIDEO_ID_2')">
-    <img src="images/3.jpg" onclick="openVideo('VIDEO_ID_3')">
-    <img src="images/4.jpg" onclick="openVideo('VIDEO_ID_4')">
-    <img src="images/5.jpg" onclick="openVideo('VIDEO_ID_5')">
-    <img src="images/6.jpg" onclick="openVideo('VIDEO_ID_6')">
+    <img src="images/1.jpg" onclick="openDiary1()">
+    <img src="images/2.jpg">
+    <img src="images/3.jpg">
+    <img src="images/4.jpg">
+    <img src="images/5.jpg">
+    <img src="images/6.jpg">
   </div>
 
-  <!-- FULLSCREEN VIDEO -->
+  <!-- FULLSCREEN OVERLAY -->
   <div class="overlay" id="overlay">
-    <div class="close" onclick="closeVideo()">✕</div>
-    <iframe id="player"
-      src=""
-      frameborder="0"
-      allow="autoplay; fullscreen">
-    </iframe>
+    <div class="close" onclick="closeOverlay()">✕</div>
+
+    <div class="content">
+      <iframe
+        id="player"
+        src=""
+        title="YouTube video player"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+
+      <div class="diary" id="diary"></div>
+    </div>
   </div>
 
   <script>
-    function openVideo(videoId) {
-      const overlay = document.getElementById('overlay');
-      const player = document.getElementById('player');
+    function openDiary1() {
+      const overlay = document.getElementById("overlay");
+      const player = document.getElementById("player");
+      const diary = document.getElementById("diary");
 
-      player.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1";
+      // YouTube video
+      player.src = "https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1";
+
+      // Clear diary
+      diary.innerHTML = "";
+
+      // Diary content (correct folder paths)
+      diary.innerHTML += `
+        <img src="diary/diary1-1.png">
+        <p>Entry 1.</p>
+
+        <img src="diary/diary1-2.JPG">
+        <p>Entry 2.</p>
+
+        <img src="diary/diary1-3.jpeg">
+        <p>Entry 3.</p>
+
+        <img src="diary/diary1-4.PNG">
+        <p>Entry 4.</p>
+      `;
+
       overlay.style.display = "flex";
     }
 
-    function closeVideo() {
-      const overlay = document.getElementById('overlay');
-      const player = document.getElementById('player');
-
-      player.src = "";
-      overlay.style.display = "none";
+    function closeOverlay() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("player").src = "";
     }
   </script>
 
