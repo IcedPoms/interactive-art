@@ -5,14 +5,25 @@
   <title>Website Art</title>
 
   <style>
+    /* GLOBAL */
     body {
       margin: 0;
       background: black;
       font-family: monospace;
       color: white;
+
+      /* vertical scroll only */
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
-    /* FIRST PAGE — 6 IMAGES, 2 ROWS OF 3 */
+    /* hide scrollbar (still scrollable) */
+    body::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
+    /* FIRST PAGE — 6 IMAGES */
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -33,20 +44,26 @@
       background: black;
       display: none;
       overflow-y: auto;
+      overflow-x: hidden;
       z-index: 999;
+    }
+
+    .overlay::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
     }
 
     .close {
       position: fixed;
-      top: 15px;
-      right: 20px;
+      top: 14px;
+      right: 18px;
       font-size: 22px;
       cursor: pointer;
-      opacity: 0.7;
+      opacity: 0.6;
       z-index: 1000;
     }
 
-    /* SCROLL SPACING */
+    /* SPACING */
     .spacer {
       height: 60vh;
     }
@@ -65,35 +82,40 @@
 
     /* DIARY SECTION */
     .diary-section {
+      position: relative;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 30px;
     }
 
-    .diary-section img {
-      max-width: 70vw;
-      max-height: 75vh;
+    .diary-image {
+      max-width: 80vw;
+      max-height: 80vh;
       image-rendering: pixelated;
     }
 
-    /* ARROWS — OLD INTERNET VIBE */
-    .arrows {
-      display: flex;
-      gap: 80px;
-      font-size: 28px;
-      opacity: 0.6;
+    /* ARROWS — UNDERTALE / EARLY RPG */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 32px;
+      opacity: 0.5;
+      cursor: pointer;
       user-select: none;
     }
 
-    .arrows span {
-      cursor: pointer;
+    .arrow:hover {
+      opacity: 1;
     }
 
-    .arrows span:hover {
-      opacity: 1;
+    .arrow.left {
+      left: 40px;
+    }
+
+    .arrow.right {
+      right: 40px;
     }
   </style>
 </head>
@@ -129,11 +151,15 @@
     <div class="spacer"></div>
 
     <div class="diary-section">
-      <img id="diaryImage" src="">
-      <div class="arrows">
-        <span onclick="prevImage()">&lt;</span>
-        <span onclick="nextImage()">&gt;</span>
-      </div>
+      <div class="arrow left" onclick="prevImage()">&lt;</div>
+
+      <img
+        id="diaryImage"
+        class="diary-image"
+        src=""
+      >
+
+      <div class="arrow right" onclick="nextImage()">&gt;</div>
     </div>
 
     <div class="spacer"></div>
