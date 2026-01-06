@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Interactive Artwork</title>
+  <title>Layer Test</title>
 
   <style>
     html, body {
@@ -10,33 +10,39 @@
       padding: 0;
       width: 100%;
       background: black;
-      font-family: monospace;
     }
 
-    /* Container for layered images */
     #stage {
       position: relative;
       width: 100%;
+      min-height: 100vh;
     }
 
-    /* Base image (JPG) */
     #base {
       width: 100%;
+      height: auto;
       display: block;
+      z-index: 1;
     }
 
-    /* Overlay image (PNG) */
     #overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      pointer-events: none; /* clicks pass through */
+      height: auto;
+      z-index: 2;
+      pointer-events: none;
     }
+  </style>
+</head>
 
-    /* Dialog box */
-    #dialog {
-      position: fixed;
-      bottom: 10%;
-      left: 50%;
-      transform:
+<body>
+
+  <div id="stage">
+    <img id="base" src="images/1.jpg" alt="">
+    <img id="overlay" src="images/1_1.png" alt="">
+  </div>
+
+</body>
+</html>
