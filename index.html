@@ -8,25 +8,27 @@
     body {
       margin: 0;
       background: black;
-      font-family: sans-serif;
+      overflow: hidden;
+      font-family: monospace;
     }
 
-    /* IMAGE GRID */
+    /* FULL SCREEN IMAGE GRID */
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding: 10px;
+      grid-template-rows: repeat(2, 1fr);
+      width: 100vw;
+      height: 100vh;
     }
 
     .grid img {
       width: 100%;
-      cursor: pointer;
-      border: 2px solid white;
+      height: 100%;
       object-fit: cover;
+      cursor: pointer;
     }
 
-    /* FULLSCREEN OVERLAY */
+    /* OVERLAY */
     .overlay {
       position: fixed;
       top: 0;
@@ -35,45 +37,70 @@
       height: 100vh;
       background: black;
       display: none;
-      justify-content: center;
-      align-items: center;
       z-index: 999;
+      overflow: hidden;
     }
 
     .close {
       position: fixed;
-      top: 20px;
-      right: 30px;
+      top: 10px;
+      right: 15px;
       color: white;
-      font-size: 30px;
+      font-size: 24px;
       cursor: pointer;
       z-index: 1000;
     }
 
-    /* CONTENT AREA */
+    /* CONTENT */
     .content {
-      width: 80vw;
-      max-height: 90vh;
+      width: 100%;
+      height: 100%;
       overflow-y: auto;
-      color: white;
     }
 
     iframe {
       width: 100%;
-      height: 45vw;
-      max-height: 70vh;
+      height: 60vh;
+      display: block;
     }
 
-    /* DIARY */
-    .diary img {
+    /* DIARY VIEWER */
+    .diary-viewer {
+      position: relative;
       width: 100%;
-      margin-top: 30px;
+      height: 40vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .diary p {
-      font-size: 14px;
+    .diary-viewer img {
+      max-height: 100%;
+      max-width: 100%;
+      image-rendering: pixelated;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 32px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
       opacity: 0.7;
-      margin-top: 5px;
+    }
+
+    .arrow:hover {
+      opacity: 1;
+    }
+
+    .left {
+      left: 20px;
+    }
+
+    .right {
+      right: 20px;
     }
   </style>
 </head>
@@ -90,7 +117,7 @@
     <img src="images/6.jpg">
   </div>
 
-  <!-- FULLSCREEN OVERLAY -->
+  <!-- OVERLAY -->
   <div class="overlay" id="overlay">
     <div class="close" onclick="closeOverlay()">✕</div>
 
@@ -98,49 +125,55 @@
       <iframe
         id="player"
         src=""
-        title="YouTube video player"
         frameborder="0"
         allow="autoplay; encrypted-media"
         allowfullscreen>
       </iframe>
 
-      <div class="diary" id="diary"></div>
+      <div class="diary-viewer">
+        <div class="arrow left" onclick="prevImage()">◀</div>
+        <img id="diaryImage" src="">
+        <div class="arrow right" onclick="nextImage()">▶</div>
+      </div>
     </div>
   </div>
 
   <script>
+    const diaryImages = [
+      "diary/diary1-1.png",
+      "diary/diary1-2.JPG",
+      "diary/diary1-3.jpeg",
+      "diary/diary1-4.PNG"
+    ];
+
+    let currentIndex = 0;
+
     function openDiary1() {
-      const overlay = document.getElementById("overlay");
-      const player = document.getElementById("player");
-      const diary = document.getElementById("diary");
+      currentIndex = 0;
 
-      // YouTube video
-      player.src = "https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1";
+      document.getElementById("player").src =
+        "https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1";
 
-      // Clear diary
-      diary.innerHTML = "";
+      document.getElementById("diaryImage").src =
+        diaryImages[currentIndex];
 
-      // Diary content (correct folder paths)
-      diary.innerHTML += `
-        <img src="diary/diary1-1.png">
-        <p>Entry 1.</p>
-
-        <img src="diary/diary1-2.JPG">
-        <p>Entry 2.</p>
-
-        <img src="diary/diary1-3.jpeg">
-        <p>Entry 3.</p>
-
-        <img src="diary/diary1-4.PNG">
-        <p>Entry 4.</p>
-      `;
-
-      overlay.style.display = "flex";
+      document.getElementById("overlay").style.display = "block";
     }
 
     function closeOverlay() {
       document.getElementById("overlay").style.display = "none";
       document.getElementById("player").src = "";
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % diaryImages.length;
+      document.getElementById("diaryImage").src = diaryImages[currentIndex];
+    }
+
+    function prevImage() {
+      currentIndex =
+        (currentIndex - 1 + diaryImages.length) % diaryImages.length;
+      document.getElementById("diaryImage").src = diaryImages[currentIndex];
     }
   </script>
 
