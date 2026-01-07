@@ -5,202 +5,140 @@
   <title>Website Art</title>
 
   <style>
-    /* GLOBAL */
     body {
       margin: 0;
       background: black;
-      font-family: monospace;
       color: white;
-
-      /* vertical scroll only */
-      overflow-y: auto;
-      overflow-x: hidden;
+      font-family: monospace;
+      overflow: hidden;
     }
 
-    /* hide scrollbar (still scrollable) */
-    body::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
-    }
-
-    /* FIRST PAGE — 6 IMAGES */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    /* ---------- HOME (3 IMAGES) ---------- */
+    #home {
+      display: flex;
       width: 100vw;
+      height: 100vh;
     }
 
-    .grid img {
-      width: 100%;
-      height: auto;
-      display: block;
+    #home img {
+      width: 33.33%;
+      height: 100%;
+      object-fit: cover;
       cursor: pointer;
     }
 
-    /* OVERLAY */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: black;
+    /* ---------- VIDEO SCREEN ---------- */
+    #videoScreen {
       display: none;
-      overflow-y: auto;
-      overflow-x: hidden;
-      z-index: 999;
-    }
-
-    .overlay::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
-    }
-
-    .close {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      font-size: 22px;
-      cursor: pointer;
-      opacity: 0.6;
-      z-index: 1000;
-    }
-
-    /* SPACING */
-    .spacer {
-      height: 60vh;
-    }
-
-    /* VIDEO */
-    .video-wrapper {
-      display: flex;
-      justify-content: center;
-    }
-
-    iframe {
-      width: 480px;
-      height: 270px;
-      max-width: 80vw;
-    }
-
-    /* DIARY SECTION */
-    .diary-section {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
+      width: 100vw;
+      height: 100vh;
+      background: black;
       align-items: center;
       justify-content: center;
     }
 
-    .diary-image {
-      max-width: 80vw;
-      max-height: 80vh;
-      image-rendering: pixelated;
+    #videoScreen iframe {
+      width: 80vw;
+      height: 45vw;
+      max-width: 800px;
+      max-height: 450px;
     }
 
-    /* ARROWS — UNDERTALE / EARLY RPG */
-    .arrow {
+    /* ---------- RANDOM IMAGE SCREEN ---------- */
+    #randomScreen {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background: black;
+      overflow: hidden;
+    }
+
+    .popImage {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 32px;
-      opacity: 0.5;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .arrow:hover {
-      opacity: 1;
-    }
-
-    .arrow.left {
-      left: 40px;
-    }
-
-    .arrow.right {
-      right: 40px;
+      max-width: 300px;
+      max-height: 300px;
+      image-rendering: pixelated;
+      opacity: 0;
+      transition: opacity 0.3s;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- FIRST PAGE -->
-  <div class="grid">
-    <img src="images/1.jpg" onclick="openDiary1()">
-    <img src="images/2.jpg">
+  <!-- HOME -->
+  <div id="home">
+    <img src="images/1.jpg" onclick="openVideo()">
+    <img src="images/2.jpg" onclick="openRandom()">
     <img src="images/3.jpg">
-    <img src="images/4.jpg">
-    <img src="images/5.jpg">
-    <img src="images/6.jpg">
   </div>
 
-  <!-- OVERLAY -->
-  <div class="overlay" id="overlay">
-    <div class="close" onclick="closeOverlay()">x</div>
-
-    <div class="spacer"></div>
-
-    <div class="video-wrapper">
-      <iframe
-        id="player"
-        src=""
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="diary-section">
-      <div class="arrow left" onclick="prevImage()">&lt;</div>
-
-      <img
-        id="diaryImage"
-        class="diary-image"
-        src=""
-      >
-
-      <div class="arrow right" onclick="nextImage()">&gt;</div>
-    </div>
-
-    <div class="spacer"></div>
+  <!-- VIDEO PAGE -->
+  <div id="videoScreen">
+    <iframe
+      src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
   </div>
+
+  <!-- RANDOM IMAGE PAGE -->
+  <div id="randomScreen"></div>
 
   <script>
-    const diaryImages = [
+    const home = document.getElementById("home");
+    const videoScreen = document.getElementById("videoScreen");
+    const randomScreen = document.getElementById("randomScreen");
+
+    const randomImages = [
       "diary/diary1-1.png",
-      "diary/diary1-2.JPG",
-      "diary/diary1-3.jpeg",
-      "diary/diary1-4.PNG"
+      "diary/diary1-13.jpg",
+      "diary/diary1-25.jpg",
+      "diary/diary1-42.jpg",
+      "diary/diary1-43.jpg",
+      "diary/diary1-50.jpg",
+      "diary/diary1-47.jpg",
+      "diary/diary1-20.jpg"
     ];
 
-    let currentIndex = 0;
+    let randomInterval;
 
-    function openDiary1() {
-      currentIndex = 0;
-
-      document.getElementById("player").src =
-        "https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1";
-
-      document.getElementById("diaryImage").src =
-        diaryImages[currentIndex];
-
-      document.getElementById("overlay").style.display = "block";
+    function openVideo() {
+      home.style.display = "none";
+      videoScreen.style.display = "flex";
     }
 
-    function closeOverlay() {
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("player").src = "";
+    function openRandom() {
+      home.style.display = "none";
+      randomScreen.style.display = "block";
+      startRandomImages();
     }
 
-    function nextImage() {
-      currentIndex = (currentIndex + 1) % diaryImages.length;
-      document.getElementById("diaryImage").src = diaryImages[currentIndex];
-    }
+    function startRandomImages() {
+      randomInterval = setInterval(() => {
+        const img = document.createElement("img");
+        img.src = randomImages[Math.floor(Math.random() * randomImages.length)];
+        img.className = "popImage";
 
-    function prevImage() {
-      currentIndex =
-        (currentIndex - 1 + diaryImages.length) % diaryImages.length;
-      document.getElementById("diaryImage").src = diaryImages[currentIndex];
+        const size = Math.random() * 200 + 100;
+        img.style.width = size + "px";
+
+        img.style.left = Math.random() * (window.innerWidth - size) + "px";
+        img.style.top = Math.random() * (window.innerHeight - size) + "px";
+
+        randomScreen.appendChild(img);
+
+        requestAnimationFrame(() => {
+          img.style.opacity = 1;
+        });
+
+        setTimeout(() => {
+          img.style.opacity = 0;
+          setTimeout(() => img.remove(), 300);
+        }, 3000);
+      }, 800);
     }
   </script>
 
