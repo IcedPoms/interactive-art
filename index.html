@@ -13,22 +13,8 @@
       overflow: hidden;
     }
 
-    /* ---------- HOME (3 IMAGES) ---------- */
-    #home {
-      display: flex;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    #home img {
-      width: 33.33%;
-      height: 100%;
-      object-fit: cover;
-      cursor: pointer;
-    }
-
-    /* ---------- VIDEO SCREEN ---------- */
-    #videoScreen {
+    /* GENERIC FULLSCREEN SCREEN */
+    .screen {
       display: none;
       width: 100vw;
       height: 100vh;
@@ -37,45 +23,60 @@
       justify-content: center;
     }
 
-    #videoScreen iframe {
-      width: 80vw;
-      height: 45vw;
-      max-width: 800px;
-      max-height: 450px;
-    }
-
-    /* ---------- RANDOM IMAGE SCREEN ---------- */
-    #randomScreen {
-      display: none;
+    /* GRID SCREENS */
+    .grid {
+      display: flex;
       width: 100vw;
       height: 100vh;
+    }
+
+    .grid img {
+      width: 33.33%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    /* RANDOM IMAGE SCREEN */
+    #randomScreen {
       position: relative;
-      background: black;
       overflow: hidden;
     }
 
     .popImage {
       position: absolute;
       max-width: 300px;
-      max-height: 300px;
-      image-rendering: pixelated;
       opacity: 0;
       transition: opacity 0.3s;
+      image-rendering: pixelated;
+    }
+
+    /* VIDEO EMBEDS */
+    iframe, video {
+      max-width: 90vw;
+      max-height: 90vh;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- HOME -->
-  <div id="home">
-    <img src="images/1.jpg" onclick="openVideo()">
+  <!-- SCREEN 1 -->
+  <div id="home" class="grid screen" style="display:flex">
+    <img src="images/1.jpg" onclick="openYouTube()">
     <img src="images/2.jpg" onclick="openRandom()">
-    <img src="images/3.jpg">
+    <img src="images/3.jpg" onclick="openSecondGrid()">
   </div>
 
-  <!-- VIDEO PAGE -->
-  <div id="videoScreen">
+  <!-- SCREEN 2 -->
+  <div id="secondGrid" class="grid screen">
+    <img src="images/4.jpg" onclick="openSpotify()">
+    <img src="images/6.jpg" onclick="openLocalVideo()">
+    <img src="images/5.jpg">
+  </div>
+
+  <!-- YOUTUBE -->
+  <div id="youtubeScreen" class="screen">
     <iframe
       src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
       frameborder="0"
@@ -84,13 +85,55 @@
     </iframe>
   </div>
 
-  <!-- RANDOM IMAGE PAGE -->
-  <div id="randomScreen"></div>
+  <!-- SPOTIFY -->
+  <div id="spotifyScreen" class="screen">
+    <iframe
+      style="border-radius:12px"
+      src="https://open.spotify.com/embed/playlist/5YVVs5t3cjzjXEfBVbqsyy"
+      width="80%"
+      height="352"
+      frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
+  </div>
+
+  <!-- LOCAL VIDEO -->
+  <div id="localVideoScreen" class="screen">
+    <video src="videos/waves.mp4" controls autoplay></video>
+  </div>
+
+  <!-- RANDOM IMAGES -->
+  <div id="randomScreen" class="screen"></div>
 
   <script>
-    const home = document.getElementById("home");
-    const videoScreen = document.getElementById("videoScreen");
-    const randomScreen = document.getElementById("randomScreen");
+    const screens = document.querySelectorAll(".screen");
+
+    function show(id) {
+      screens.forEach(s => s.style.display = "none");
+      document.getElementById(id).style.display = "flex";
+    }
+
+    function openYouTube() {
+      show("youtubeScreen");
+    }
+
+    function openRandom() {
+      show("randomScreen");
+      startRandomImages();
+    }
+
+    function openSecondGrid() {
+      show("secondGrid");
+    }
+
+    function openSpotify() {
+      show("spotifyScreen");
+    }
+
+    function openLocalVideo() {
+      show("localVideoScreen");
+    }
 
     const randomImages = [
       "diary/diary1-1.png",
@@ -103,36 +146,20 @@
       "diary/diary1-20.jpg"
     ];
 
-    let randomInterval;
-
-    function openVideo() {
-      home.style.display = "none";
-      videoScreen.style.display = "flex";
-    }
-
-    function openRandom() {
-      home.style.display = "none";
-      randomScreen.style.display = "block";
-      startRandomImages();
-    }
-
     function startRandomImages() {
-      randomInterval = setInterval(() => {
+      setInterval(() => {
         const img = document.createElement("img");
         img.src = randomImages[Math.floor(Math.random() * randomImages.length)];
         img.className = "popImage";
 
         const size = Math.random() * 200 + 100;
         img.style.width = size + "px";
-
         img.style.left = Math.random() * (window.innerWidth - size) + "px";
         img.style.top = Math.random() * (window.innerHeight - size) + "px";
 
-        randomScreen.appendChild(img);
+        document.getElementById("randomScreen").appendChild(img);
 
-        requestAnimationFrame(() => {
-          img.style.opacity = 1;
-        });
+        requestAnimationFrame(() => img.style.opacity = 1);
 
         setTimeout(() => {
           img.style.opacity = 0;
