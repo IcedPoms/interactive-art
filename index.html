@@ -13,7 +13,7 @@
       overflow: hidden;
     }
 
-    /* GENERIC FULLSCREEN SCREEN */
+    /* SCREENS */
     .screen {
       display: none;
       width: 100vw;
@@ -23,7 +23,7 @@
       justify-content: center;
     }
 
-    /* GRID SCREENS */
+    /* GRIDS */
     .grid {
       display: flex;
       width: 100vw;
@@ -35,6 +35,23 @@
       height: 100%;
       object-fit: cover;
       cursor: pointer;
+    }
+
+    /* BACK BUTTON */
+    #backButton {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 1000;
+      opacity: 0.6;
+      display: none;
+      user-select: none;
+    }
+
+    #backButton:hover {
+      opacity: 1;
     }
 
     /* RANDOM IMAGE SCREEN */
@@ -51,7 +68,7 @@
       image-rendering: pixelated;
     }
 
-    /* VIDEO EMBEDS */
+    /* MEDIA */
     iframe, video {
       max-width: 90vw;
       max-height: 90vh;
@@ -60,6 +77,9 @@
 </head>
 
 <body>
+
+  <!-- BACK BUTTON -->
+  <div id="backButton" onclick="goBack()">←</div>
 
   <!-- SCREEN 1 -->
   <div id="home" class="grid screen" style="display:flex">
@@ -108,10 +128,36 @@
 
   <script>
     const screens = document.querySelectorAll(".screen");
+    const backButton = document.getElementById("backButton");
 
-    function show(id) {
+    let currentScreen = "home";
+    let historyStack = [];
+
+    function show(screenId) {
+      if (currentScreen !== screenId) {
+        historyStack.push(currentScreen);
+      }
+
+      currentScreen = screenId;
+
       screens.forEach(s => s.style.display = "none");
-      document.getElementById(id).style.display = "flex";
+      document.getElementById(screenId).style.display = "flex";
+
+      backButton.style.display =
+        historyStack.length > 0 ? "block" : "none";
+    }
+
+    function goBack() {
+      if (historyStack.length === 0) return;
+
+      const previous = historyStack.pop();
+      currentScreen = previous;
+
+      screens.forEach(s => s.style.display = "none");
+      document.getElementById(previous).style.display = "flex";
+
+      backButton.style.display =
+        historyStack.length > 0 ? "block" : "none";
     }
 
     function openYouTube() {
@@ -146,8 +192,12 @@
       "diary/diary1-20.jpg"
     ];
 
+    let randomInterval;
+
     function startRandomImages() {
-      setInterval(() => {
+      if (randomInterval) return;
+
+      randomInterval = setInterval(() => {
         const img = document.createElement("img");
         img.src = randomImages[Math.floor(Math.random() * randomImages.length)];
         img.className = "popImage";
