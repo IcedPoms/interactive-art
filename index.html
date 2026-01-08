@@ -33,6 +33,7 @@ body {
   cursor: pointer;
 }
 
+/* BACK BUTTON */
 #backButton {
   position: fixed;
   top: 16px;
@@ -45,49 +46,45 @@ body {
   border: 1px solid rgba(255,255,255,0.3);
   opacity: 0.75;
 }
-
 #backButton:hover { opacity: 1; }
 
 /* RECEIPT */
 #receiptScreen {
   overflow-y: auto;
 }
-
 #receiptScreen img {
   width: 100%;
   display: block;
   cursor: pointer;
 }
 
-/* RANDOM ORGANISM */
-#organismScreen {
+/* RANDOM FIELD (7.jpg) */
+#chaosScreen {
   position: relative;
   overflow: hidden;
 }
-
-.organism-img {
+.chaosImg {
   position: absolute;
   max-width: 220px;
   cursor: pointer;
-  transition: transform 0.6s, opacity 0.6s;
+  image-rendering: pixelated;
+  transition: transform 0.4s, opacity 0.4s;
 }
 
-/* GRID CHAOS */
+/* GRID CHAOS (9.jpg) */
 #gridChaos {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  gap: 4px;
-  padding: 6px;
+  gap: 2px;
+  width: 100vw;
+  height: 100vh;
 }
-
 #gridChaos img {
   width: 100%;
-  image-rendering: pixelated;
-  transition: transform 0.2s, filter 0.2s;
+  transition: transform 0.1s, filter 0.1s;
 }
-
 #gridChaos img:hover {
-  filter: brightness(1.2) hue-rotate(280deg);
+  filter: hue-rotate(300deg) saturate(300%);
 }
 </style>
 </head>
@@ -98,31 +95,47 @@ body {
 
 <!-- HOME -->
 <div id="home" class="grid screen" style="display:flex">
-  <img src="images/1.jpg">
-  <img src="images/2.jpg">
-  <img src="images/3.jpg">
+  <img src="images/1.jpg" onclick="openYouTube()">
+  <img src="images/2.jpg" onclick="openRandom()">
+  <img src="images/3.jpg" onclick="openSecondGrid()">
 </div>
 
-<!-- SECOND -->
+<!-- SECOND GRID -->
 <div id="secondGrid" class="grid screen">
-  <img src="images/4.jpg">
-  <img src="images/6.jpg">
-  <img src="images/5.jpg">
+  <img src="images/4.jpg" onclick="openSpotify()">
+  <img src="images/6.jpg" onclick="openLocalVideo()">
+  <img src="images/5.jpg" onclick="openReceipt()">
 </div>
 
 <!-- RECEIPT -->
 <div id="receiptScreen" class="screen">
-  <img src="images/7.jpg" onclick="openOrganism()">
+  <img src="images/7.jpg" onclick="openChaos()">
   <img src="images/9.jpg" onclick="openGridChaos()">
   <img src="images/10.jpg">
 </div>
 
-<!-- ORGANISM -->
-<div id="organismScreen" class="screen"></div>
+<!-- CHAOS -->
+<div id="chaosScreen" class="screen"></div>
 
 <!-- GRID CHAOS -->
-<div id="gridChaosScreen" class="screen">
-  <div id="gridChaos"></div>
+<div id="gridChaos" class="screen"></div>
+
+<!-- YOUTUBE -->
+<div id="youtubeScreen" class="screen">
+  <iframe src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
+    frameborder="0" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<!-- SPOTIFY -->
+<div id="spotifyScreen" class="screen">
+  <iframe style="border-radius:12px"
+    src="https://open.spotify.com/embed/playlist/5YVVs5t3cjzjXEfBVbqsyy"
+    width="80%" height="352" frameborder="0"></iframe>
+</div>
+
+<!-- LOCAL VIDEO -->
+<div id="localVideoScreen" class="screen">
+  <video src="videos/waves.mp4" controls autoplay></video>
 </div>
 
 <script>
@@ -134,87 +147,90 @@ function show(id) {
   historyStack.push(currentScreen);
   currentScreen = id;
   screens.forEach(s => s.style.display = "none");
-  document.getElementById(id).style.display = "block";
+  document.getElementById(id).style.display = "flex";
 }
 
 function goBack() {
-  if (!historyStack.length) return;
   const prev = historyStack.pop();
-  currentScreen = prev;
+  if (!prev) return;
   screens.forEach(s => s.style.display = "none");
-  document.getElementById(prev).style.display = "block";
+  document.getElementById(prev).style.display = prev === "receiptScreen" ? "block" : "flex";
+  currentScreen = prev;
 }
 
-/* ---------- 7.JPG ORGANISM ---------- */
+/* BASIC NAV */
+function openYouTube(){ show("youtubeScreen"); }
+function openSpotify(){ show("spotifyScreen"); }
+function openLocalVideo(){ show("localVideoScreen"); }
+function openSecondGrid(){ show("secondGrid"); }
+function openReceipt(){ show("receiptScreen"); }
 
-const organismImages = [
-  17,18,5,7,10,11,15,26,27,31,32,33,34,45,39,41,44
-].map(n => `diary/diary1-${n}.jpg`);
+/* ===== 7.JPG CHAOS ===== */
+const chaosImgs = [
+"diary/diary1-17.jpg","diary/diary1-18.jpg","diary/diary1-5.jpg",
+"diary/diary1-7.jpg","diary/diary1-10.jpg","diary/diary1-11.jpg",
+"diary/diary1-15.jpg","diary/diary1-26.jpg","diary/diary1-27.jpg",
+"diary/diary1-31.jpg","diary/diary1-32.jpg","diary/diary1-33.jpg",
+"diary/diary1-34.jpg","diary/diary1-45.jpg","diary/diary1-39.jpg",
+"diary/diary1-41.jpg","diary/diary1-44.jpg"
+];
 
-let activeCount = 0;
+let chaosCount = 0;
 
-function openOrganism() {
-  show("organismScreen");
-  document.getElementById("organismScreen").innerHTML = "";
-  activeCount = 0;
-  spawnOrganism();
+function openChaos(){
+  show("chaosScreen");
+  spawnChaos(6);
 }
 
-function spawnOrganism() {
-  if (activeCount > 35) {
-    document.getElementById("organismScreen").innerHTML = "";
-    activeCount = 0;
+function spawnChaos(n){
+  for(let i=0;i<n;i++){
+    const img=document.createElement("img");
+    img.src=chaosImgs[Math.floor(Math.random()*chaosImgs.length)];
+    img.className="chaosImg";
+    img.style.left=Math.random()*80+"vw";
+    img.style.top=Math.random()*80+"vh";
+    img.onclick=()=>killChaos(img);
+    document.getElementById("chaosScreen").appendChild(img);
+    chaosCount++;
+  }
+}
+
+function killChaos(img){
+  const r=Math.random();
+  if(r<0.25) img.style.transform="scale(0)";
+  else if(r<0.5) img.style.transform="translateX(200vw)";
+  else if(r<0.75) img.style.transform="rotate(720deg)";
+  else img.style.opacity=0;
+
+  setTimeout(()=>{
+    img.remove();
+    chaosCount--;
+    spawnChaos(2);
+    if(chaosCount>25){
+      document.getElementById("chaosScreen").innerHTML="";
+      chaosCount=1;
+      spawnChaos(1);
+    }
+  },400);
+}
+
+/* ===== 9.JPG GRID CHAOS ===== */
+function openGridChaos(){
+  show("gridChaos");
+  const g=document.getElementById("gridChaos");
+  g.innerHTML="";
+  for(let i=1;i<=60;i++){
+    const img=document.createElement("img");
+    img.src=`diary/diary1-${i}.jpg`;
+    g.appendChild(img);
   }
 
-  const img = document.createElement("img");
-  img.src = organismImages[Math.floor(Math.random() * organismImages.length)];
-  img.className = "organism-img";
-
-  const size = Math.random() * 140 + 80;
-  img.style.width = size + "px";
-  img.style.left = Math.random() * (innerWidth - size) + "px";
-  img.style.top = Math.random() * (innerHeight - size) + "px";
-
-  img.onclick = () => react(img);
-
-  document.getElementById("organismScreen").appendChild(img);
-  activeCount++;
-}
-
-function react(img) {
-  const reaction = Math.floor(Math.random() * 4);
-
-  if (reaction === 0) img.style.transform = "scale(0)";
-  if (reaction === 1) img.style.transform = "translateX(800px)";
-  if (reaction === 2) img.style.transform = "rotate(720deg)";
-  if (reaction === 3) img.style.opacity = 0;
-
-  setTimeout(() => img.remove(), 600);
-  spawnOrganism();
-  spawnOrganism();
-}
-
-/* ---------- 9.JPG GRID CHAOS ---------- */
-
-function openGridChaos() {
-  show("gridChaosScreen");
-  const grid = document.getElementById("gridChaos");
-  grid.innerHTML = "";
-
-  for (let i = 1; i <= 60; i++) {
-    const img = document.createElement("img");
-    img.src = `diary/diary1-${i}.jpg`;
-    grid.appendChild(img);
-  }
-
-  setInterval(() => {
-    document.querySelectorAll("#gridChaos img").forEach(img => {
-      const r = Math.random();
-      if (r < 0.3) img.style.transform = `rotate(${Math.random()*20-10}deg)`;
-      else if (r < 0.6) img.style.transform = `translate(${Math.random()*10}px,${Math.random()*10}px)`;
-      else img.style.transform = "none";
+  setInterval(()=>{
+    document.querySelectorAll("#gridChaos img").forEach(img=>{
+      img.style.transform=`rotate(${Math.random()*10-5}deg)
+        translate(${Math.random()*6-3}px,${Math.random()*6-3}px)`;
     });
-  }, 300);
+  },120);
 }
 </script>
 
