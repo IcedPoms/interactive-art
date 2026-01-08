@@ -13,6 +13,7 @@
       overflow: hidden;
     }
 
+    /* SCREENS */
     .screen {
       display: none;
       width: 100vw;
@@ -22,6 +23,7 @@
       justify-content: center;
     }
 
+    /* HORIZONTAL GRID */
     .grid {
       display: flex;
       width: 100vw;
@@ -54,11 +56,6 @@
       opacity: 1;
     }
 
-    iframe, video {
-      max-width: 90vw;
-      max-height: 90vh;
-    }
-
     /* RANDOM IMAGE SCREEN */
     #randomScreen {
       position: relative;
@@ -73,59 +70,49 @@
       image-rendering: pixelated;
     }
 
-    /* ---------- VERTICAL IMAGE SCREEN ---------- */
-    #verticalScreen {
+    /* RECEIPT / COLUMN SCREEN */
+    #receiptScreen {
       display: none;
       width: 100vw;
       height: 100vh;
       overflow-y: auto;
-      overflow-x: hidden;
       background: black;
     }
 
-    #verticalScreen .image-wrapper {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #verticalScreen img {
+    #receiptScreen img {
+      width: 100%;
       display: block;
     }
 
-    /* ROTATED IMAGES */
-    .rotated {
-      transform: rotate(-90deg);
-      width: 100vh;
-      height: 100vw;
-      object-fit: cover;
+    /* SCROLLBAR STYLING (matches back button vibe) */
+    #receiptScreen::-webkit-scrollbar {
+      width: 10px;
     }
 
-    /* SCROLLBAR STYLE */
-    #verticalScreen::-webkit-scrollbar {
-      width: 12px;
-    }
-
-    #verticalScreen::-webkit-scrollbar-track {
+    #receiptScreen::-webkit-scrollbar-track {
       background: black;
     }
 
-    #verticalScreen::-webkit-scrollbar-thumb {
-      background: black;
-      border: 1px solid rgba(255,255,255,0.3);
+    #receiptScreen::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border: 2px solid black;
     }
 
-    #verticalScreen {
-      scrollbar-color: rgba(255,255,255,0.4) black;
-      scrollbar-width: thin;
+    #receiptScreen::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.6);
+    }
+
+    /* MEDIA */
+    iframe, video {
+      max-width: 90vw;
+      max-height: 90vh;
     }
   </style>
 </head>
 
 <body>
 
+  <!-- BACK BUTTON -->
   <div id="backButton" onclick="goBack()">←</div>
 
   <!-- SCREEN 1 -->
@@ -139,15 +126,22 @@
   <div id="secondGrid" class="grid screen">
     <img src="images/4.jpg" onclick="openSpotify()">
     <img src="images/6.jpg" onclick="openLocalVideo()">
-    <img src="images/5.jpg" onclick="openVertical()">
+    <img src="images/5.jpg" onclick="openReceipt()">
+  </div>
+
+  <!-- RECEIPT SCREEN -->
+  <div id="receiptScreen" class="screen">
+    <img src="images/7.jpg">
+    <img src="images/9.jpg">
+    <img src="images/10.jpg">
   </div>
 
   <!-- YOUTUBE -->
   <div id="youtubeScreen" class="screen">
     <iframe
-      src="https://www.youtube.com/embed/Ewt8nDlL_M0"
+      src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
       frameborder="0"
-      allow="encrypted-media"
+      allow="autoplay; encrypted-media"
       allowfullscreen>
     </iframe>
   </div>
@@ -160,34 +154,23 @@
       width="80%"
       height="352"
       frameborder="0"
-      allow="encrypted-media; fullscreen; picture-in-picture"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
       loading="lazy">
     </iframe>
   </div>
 
   <!-- LOCAL VIDEO -->
   <div id="localVideoScreen" class="screen">
-    <video src="videos/waves.mp4" controls></video>
+    <video src="videos/waves.mp4" controls autoplay></video>
   </div>
 
   <!-- RANDOM IMAGES -->
   <div id="randomScreen" class="screen"></div>
 
-  <!-- VERTICAL ROTATED IMAGES -->
-  <div id="verticalScreen">
-    <div class="image-wrapper">
-      <img src="images/7.jpg" class="rotated">
-    </div>
-    <div class="image-wrapper">
-      <img src="images/9.jpg" class="rotated">
-    </div>
-    <div class="image-wrapper">
-      <img src="images/10.jpg" class="rotated">
-    </div>
-  </div>
-
   <script>
     const screens = document.querySelectorAll(".screen");
+    const backButton = document.getElementById("backButton");
+
     let currentScreen = "home";
     let historyStack = [];
 
@@ -200,24 +183,24 @@
 
       screens.forEach(s => s.style.display = "none");
       document.getElementById(screenId).style.display =
-        screenId === "verticalScreen" ? "block" : "flex";
+        screenId === "receiptScreen" ? "block" : "flex";
 
-      document.getElementById("backButton").style.display =
-        historyStack.length ? "block" : "none";
+      backButton.style.display =
+        historyStack.length > 0 ? "block" : "none";
     }
 
     function goBack() {
-      if (!historyStack.length) return;
+      if (historyStack.length === 0) return;
 
       const previous = historyStack.pop();
       currentScreen = previous;
 
       screens.forEach(s => s.style.display = "none");
       document.getElementById(previous).style.display =
-        previous === "verticalScreen" ? "block" : "flex";
+        previous === "receiptScreen" ? "block" : "flex";
 
-      document.getElementById("backButton").style.display =
-        historyStack.length ? "block" : "none";
+      backButton.style.display =
+        historyStack.length > 0 ? "block" : "none";
     }
 
     function openYouTube() { show("youtubeScreen"); }
@@ -225,7 +208,7 @@
     function openSecondGrid() { show("secondGrid"); }
     function openSpotify() { show("spotifyScreen"); }
     function openLocalVideo() { show("localVideoScreen"); }
-    function openVertical() { show("verticalScreen"); }
+    function openReceipt() { show("receiptScreen"); }
 
     const randomImages = [
       "diary/diary1-1.png",
@@ -254,6 +237,7 @@
         img.style.top = Math.random() * (window.innerHeight - size) + "px";
 
         document.getElementById("randomScreen").appendChild(img);
+
         requestAnimationFrame(() => img.style.opacity = 1);
 
         setTimeout(() => {
