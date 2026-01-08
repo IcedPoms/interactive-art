@@ -1,248 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Website Art</title>
+  <meta charset="UTF-8">
+  <title>Website Art</title>
 
-<style>
-body {
-  margin: 0;
-  background: black;
-  color: white;
-  font-family: monospace;
-  overflow: hidden;
-}
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: monospace;
+      overflow: hidden;
+    }
 
-/* ---------- SCREENS ---------- */
-.screen {
-  display: none;
-  width: 100vw;
-  height: 100vh;
-  background: black;
-  align-items: center;
-  justify-content: center;
-}
+    /* SCREENS */
+    .screen {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      align-items: center;
+      justify-content: center;
+    }
 
-.grid {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-}
+    /* GRIDS */
+    .grid {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+    }
 
-.grid img {
-  width: 33.33%;
-  height: 100%;
-  object-fit: cover;
-  cursor: pointer;
-}
+    .grid img {
+      width: 33.33%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
 
-/* ---------- BACK BUTTON ---------- */
-#backButton {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  font-size: 24px;
-  padding: 6px 10px;
-  background: rgba(0,0,0,0.8);
-  cursor: pointer;
-  z-index: 2000;
-  display: none;
-  user-select: none;
-}
+    /* BACK BUTTON */
+    #backButton {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 1000;
+      opacity: 0.6;
+      display: none;
+      user-select: none;
+    }
 
-#backButton:hover {
-  opacity: 0.8;
-}
+    #backButton:hover {
+      opacity: 1;
+    }
 
-/* ---------- RANDOM IMAGE SCREENS ---------- */
-#randomScreen,
-#chaosScreen {
-  position: relative;
-  overflow: hidden;
-}
+    /* RANDOM IMAGE SCREEN */
+    #randomScreen {
+      position: relative;
+      overflow: hidden;
+    }
 
-.popImage {
-  position: absolute;
-  max-width: 260px;
-  transition: transform 0.6s, opacity 0.6s;
-  cursor: pointer;
-  image-rendering: pixelated;
-}
+    .popImage {
+      position: absolute;
+      max-width: 300px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      image-rendering: pixelated;
+    }
 
-/* ---------- THIRD GRID (VERTICAL) ---------- */
-#thirdGrid {
-  display: block;
-  overflow-y: auto;
-}
-
-#thirdGrid img {
-  width: 100%;
-  display: block;
-  cursor: pointer;
-}
-
-/* ---------- MEDIA ---------- */
-iframe, video {
-  max-width: 90vw;
-  max-height: 90vh;
-}
-</style>
+    /* MEDIA */
+    iframe, video {
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="backButton" onclick="goBack()">←</div>
+  <!-- BACK BUTTON -->
+  <div id="backButton" onclick="goBack()">←</div>
 
-<!-- HOME -->
-<div id="home" class="grid screen" style="display:flex">
-  <img src="images/1.jpg" onclick="openYouTube()">
-  <img src="images/2.jpg" onclick="openRandom()">
-  <img src="images/3.jpg" onclick="openSecondGrid()">
-</div>
+  <!-- SCREEN 1 -->
+  <div id="home" class="grid screen" style="display:flex">
+    <img src="images/1.jpg" onclick="openYouTube()">
+    <img src="images/2.jpg" onclick="openRandom()">
+    <img src="images/3.jpg" onclick="openSecondGrid()">
+  </div>
 
-<!-- SECOND GRID -->
-<div id="secondGrid" class="grid screen">
-  <img src="images/4.jpg" onclick="openSpotify()">
-  <img src="images/6.jpg" onclick="openLocalVideo()">
-  <img src="images/5.jpg" onclick="openThirdGrid()">
-</div>
+  <!-- SCREEN 2 -->
+  <div id="secondGrid" class="grid screen">
+    <img src="images/4.jpg" onclick="openSpotify()">
+    <img src="images/6.jpg" onclick="openLocalVideo()">
+    <img src="images/5.jpg">
+  </div>
 
-<!-- THIRD GRID (VERTICAL) -->
-<div id="thirdGrid" class="screen">
-  <img src="images/7.jpg" onclick="openChaos()">
-  <img src="images/9.jpg">
-  <img src="images/10.jpg">
-</div>
+  <!-- YOUTUBE -->
+  <div id="youtubeScreen" class="screen">
+    <iframe
+      src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  </div>
 
-<!-- YOUTUBE -->
-<div id="youtubeScreen" class="screen">
-  <iframe src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
-    frameborder="0" allow="autoplay" allowfullscreen></iframe>
-</div>
+  <!-- SPOTIFY -->
+  <div id="spotifyScreen" class="screen">
+    <iframe
+      style="border-radius:12px"
+      src="https://open.spotify.com/embed/playlist/5YVVs5t3cjzjXEfBVbqsyy"
+      width="80%"
+      height="352"
+      frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
+  </div>
 
-<!-- SPOTIFY -->
-<div id="spotifyScreen" class="screen">
-  <iframe style="border-radius:12px"
-    src="https://open.spotify.com/embed/playlist/5YVVs5t3cjzjXEfBVbqsyy"
-    width="80%" height="352" frameborder="0"
-    allow="autoplay; encrypted-media"></iframe>
-</div>
+  <!-- LOCAL VIDEO -->
+  <div id="localVideoScreen" class="screen">
+    <video src="videos/waves.mp4" controls autoplay></video>
+  </div>
 
-<!-- LOCAL VIDEO -->
-<div id="localVideoScreen" class="screen">
-  <video src="videos/waves.mp4" controls autoplay></video>
-</div>
+  <!-- RANDOM IMAGES -->
+  <div id="randomScreen" class="screen"></div>
 
-<!-- RANDOM -->
-<div id="randomScreen" class="screen"></div>
+  <script>
+    const screens = document.querySelectorAll(".screen");
+    const backButton = document.getElementById("backButton");
 
-<!-- CHAOS -->
-<div id="chaosScreen" class="screen"></div>
+    let currentScreen = "home";
+    let historyStack = [];
 
-<script>
-/* ---------- NAVIGATION ---------- */
-const screens = document.querySelectorAll(".screen");
-const backButton = document.getElementById("backButton");
+    function show(screenId) {
+      if (currentScreen !== screenId) {
+        historyStack.push(currentScreen);
+      }
 
-let historyStack = [];
-let current = "home";
+      currentScreen = screenId;
 
-function show(id) {
-  if (current !== id) historyStack.push(current);
-  current = id;
+      screens.forEach(s => s.style.display = "none");
+      document.getElementById(screenId).style.display = "flex";
 
-  screens.forEach(s => s.style.display = "none");
-  document.getElementById(id).style.display = "flex";
+      backButton.style.display =
+        historyStack.length > 0 ? "block" : "none";
+    }
 
-  backButton.style.display = historyStack.length ? "block" : "none";
-}
+    function goBack() {
+      if (historyStack.length === 0) return;
 
-function goBack() {
-  if (!historyStack.length) return;
-  const prev = historyStack.pop();
-  current = prev;
-  screens.forEach(s => s.style.display = "none");
-  document.getElementById(prev).style.display = "flex";
-  backButton.style.display = historyStack.length ? "block" : "none";
-}
+      const previous = historyStack.pop();
+      currentScreen = previous;
 
-function openYouTube(){ show("youtubeScreen"); }
-function openRandom(){ show("randomScreen"); startRandomImages(); }
-function openSecondGrid(){ show("secondGrid"); }
-function openSpotify(){ show("spotifyScreen"); }
-function openLocalVideo(){ show("localVideoScreen"); }
-function openThirdGrid(){ show("thirdGrid"); }
-function openChaos(){ show("chaosScreen"); startChaos(); }
+      screens.forEach(s => s.style.display = "none");
+      document.getElementById(previous).style.display = "flex";
 
-/* ---------- RANDOM (2.jpg) ---------- */
-const randomImages = [
-  "diary/diary1-1.png","diary/diary1-13.jpg","diary/diary1-25.jpg",
-  "diary/diary1-42.jpg","diary/diary1-43.jpg","diary/diary1-50.jpg",
-  "diary/diary1-47.jpg","diary/diary1-20.jpg"
-];
+      backButton.style.display =
+        historyStack.length > 0 ? "block" : "none";
+    }
 
-setInterval(() => {
-  if (current !== "randomScreen") return;
-  spawnImage(randomImages, "randomScreen", false);
-}, 800);
+    function openYouTube() {
+      show("youtubeScreen");
+    }
 
-/* ---------- CHAOS (7.jpg) ---------- */
-const chaosImages = [
-  "diary/diary1-17.jpg","diary/diary1-18.jpg","diary/diary1-5.jpg",
-  "diary/diary1-7.jpg","diary/diary1-10.jpg","diary/diary1-11.jpg",
-  "diary/diary1-15.jpg","diary/diary1-26.jpg","diary/diary1-27.jpg",
-  "diary/diary1-31.jpg","diary/diary1-32.jpg","diary/diary1-33.jpg",
-  "diary/diary1-34.jpg","diary/diary1-39.jpg","diary/diary1-41.jpg",
-  "diary/diary1-44.jpg","diary/diary1-45.jpg"
-];
+    function openRandom() {
+      show("randomScreen");
+      startRandomImages();
+    }
 
-let chaosCount = 0;
+    function openSecondGrid() {
+      show("secondGrid");
+    }
 
-function startChaos() {
-  document.getElementById("chaosScreen").innerHTML = "";
-  chaosCount = 0;
-  for (let i=0;i<3;i++) spawnChaos();
-}
+    function openSpotify() {
+      show("spotifyScreen");
+    }
 
-function spawnChaos() {
-  if (chaosCount > 30) resetChaos();
+    function openLocalVideo() {
+      show("localVideoScreen");
+    }
 
-  const img = document.createElement("img");
-  img.src = chaosImages[Math.floor(Math.random()*chaosImages.length)];
-  img.className = "popImage";
+    const randomImages = [
+      "diary/diary1-1.png",
+      "diary/diary1-13.jpg",
+      "diary/diary1-25.jpg",
+      "diary/diary1-42.jpg",
+      "diary/diary1-43.jpg",
+      "diary/diary1-50.jpg",
+      "diary/diary1-47.jpg",
+      "diary/diary1-20.jpg"
+    ];
 
-  img.style.left = Math.random()*80+"vw";
-  img.style.top = Math.random()*80+"vh";
+    let randomInterval;
 
-  img.onclick = () => react(img);
+    function startRandomImages() {
+      if (randomInterval) return;
 
-  document.getElementById("chaosScreen").appendChild(img);
-  chaosCount++;
-}
+      randomInterval = setInterval(() => {
+        const img = document.createElement("img");
+        img.src = randomImages[Math.floor(Math.random() * randomImages.length)];
+        img.className = "popImage";
 
-function react(img) {
-  const r = Math.floor(Math.random()*4);
+        const size = Math.random() * 200 + 100;
+        img.style.width = size + "px";
+        img.style.left = Math.random() * (window.innerWidth - size) + "px";
+        img.style.top = Math.random() * (window.innerHeight - size) + "px";
 
-  if (r === 0) img.style.transform = "scale(0)";
-  if (r === 1) img.style.transform = "translateX(200vw)";
-  if (r === 2) img.style.transform = "rotate(720deg) scale(0)";
-  if (r === 3) img.style.opacity = 0;
+        document.getElementById("randomScreen").appendChild(img);
 
-  setTimeout(() => {
-    img.remove();
-    chaosCount--;
-    spawnChaos();
-    spawnChaos();
-  }, 500);
-}
+        requestAnimationFrame(() => img.style.opacity = 1);
 
-function resetChaos() {
-  const cs = document.getElementById("chaosScreen");
-  cs.innerHTML = "";
-  chaosCount = 0;
-  spawnChaos();
-}
-</script>
+        setTimeout(() => {
+          img.style.opacity = 0;
+          setTimeout(() => img.remove(), 300);
+        }, 3000);
+      }, 800);
+    }
+  </script>
 
 </body>
 </html>
