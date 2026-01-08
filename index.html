@@ -107,6 +107,41 @@
       max-width: 90vw;
       max-height: 90vh;
     }
+
+    /* NOTHING HERE TEXT */
+#nothingText {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+/* DIARY GRID */
+.diary-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  padding: 20px;
+}
+
+.diary-grid img {
+  width: 100%;
+  cursor: default;
+  transition: filter 0.3s, box-shadow 0.3s;
+}
+
+/* HOVER VARIANTS */
+.diary-grid img.invert {
+  filter: invert(1);
+}
+
+.diary-grid img.neon {
+  filter: hue-rotate(300deg) saturate(2);
+  box-shadow: 0 0 10px hotpink;
+}
+
   </style>
 </head>
 
@@ -130,11 +165,23 @@
   </div>
 
   <!-- RECEIPT SCREEN -->
-  <div id="receiptScreen" class="screen">
-    <img src="images/7.jpg">
-    <img src="images/9.jpg">
-    <img src="images/10.jpg">
-  </div>
+ <div id="receiptScreen" class="screen">
+  <img src="images/7.jpg" onclick="openSingleImage()">
+  <img src="images/9.jpg" onclick="openDiaryGrid()">
+  <img src="images/10.jpg">
+</div>
+
+  <!-- SINGLE IMAGE SCREEN -->
+<div id="singleImageScreen" class="screen">
+  <img src="images/11.jpg" style="width:100%">
+  <div id="nothingText">nothing here</div>
+</div>
+
+<!-- DIARY GRID SCREEN -->
+<div id="diaryGridScreen" class="screen">
+  <div class="diary-grid" id="diaryGrid"></div>
+</div>
+
 
   <!-- YOUTUBE -->
   <div id="youtubeScreen" class="screen">
@@ -246,6 +293,43 @@
         }, 3000);
       }, 800);
     }
+
+    function openSingleImage() {
+  show("singleImageScreen");
+
+  const text = document.getElementById("nothingText");
+  text.style.opacity = 0;
+
+  setTimeout(() => {
+    text.style.opacity = 0.6;
+  }, 5000);
+}
+
+function openDiaryGrid() {
+  show("diaryGridScreen");
+
+  const grid = document.getElementById("diaryGrid");
+  grid.innerHTML = "";
+
+  for (let i = 1; i <= 60; i++) {
+    const img = document.createElement("img");
+    img.src = `diary/diary1-${i}.jpg`;
+
+    img.addEventListener("mouseenter", () => {
+      img.classList.remove("invert", "neon");
+      Math.random() < 0.5
+        ? img.classList.add("invert")
+        : img.classList.add("neon");
+    });
+
+    img.addEventListener("mouseleave", () => {
+      img.classList.remove("invert", "neon");
+    });
+
+    grid.appendChild(img);
+  }
+}
+
   </script>
 
 </body>
