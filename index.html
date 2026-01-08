@@ -13,7 +13,6 @@
       overflow: hidden;
     }
 
-    /* SCREENS */
     .screen {
       display: none;
       width: 100vw;
@@ -23,7 +22,6 @@
       justify-content: center;
     }
 
-    /* GRIDS */
     .grid {
       display: flex;
       width: 100vw;
@@ -56,6 +54,11 @@
       opacity: 1;
     }
 
+    iframe, video {
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+
     /* RANDOM IMAGE SCREEN */
     #randomScreen {
       position: relative;
@@ -70,12 +73,6 @@
       image-rendering: pixelated;
     }
 
-    /* MEDIA */
-    iframe, video {
-      max-width: 90vw;
-      max-height: 90vh;
-    }
-
     /* ---------- VERTICAL IMAGE SCREEN ---------- */
     #verticalScreen {
       display: none;
@@ -86,14 +83,27 @@
       background: black;
     }
 
-    #verticalScreen img {
+    #verticalScreen .image-wrapper {
       width: 100vw;
       height: 100vh;
-      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #verticalScreen img {
       display: block;
     }
 
-    /* CUSTOM SCROLLBAR (MATCH BACK BUTTON) */
+    /* ROTATED IMAGES */
+    .rotated {
+      transform: rotate(-90deg);
+      width: 100vh;
+      height: 100vw;
+      object-fit: cover;
+    }
+
+    /* SCROLLBAR STYLE */
     #verticalScreen::-webkit-scrollbar {
       width: 12px;
     }
@@ -107,7 +117,6 @@
       border: 1px solid rgba(255,255,255,0.3);
     }
 
-    /* Firefox */
     #verticalScreen {
       scrollbar-color: rgba(255,255,255,0.4) black;
       scrollbar-width: thin;
@@ -117,7 +126,6 @@
 
 <body>
 
-  <!-- BACK BUTTON -->
   <div id="backButton" onclick="goBack()">←</div>
 
   <!-- SCREEN 1 -->
@@ -137,9 +145,9 @@
   <!-- YOUTUBE -->
   <div id="youtubeScreen" class="screen">
     <iframe
-      src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
+      src="https://www.youtube.com/embed/Ewt8nDlL_M0"
       frameborder="0"
-      allow="autoplay; encrypted-media"
+      allow="encrypted-media"
       allowfullscreen>
     </iframe>
   </div>
@@ -152,30 +160,34 @@
       width="80%"
       height="352"
       frameborder="0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      allow="encrypted-media; fullscreen; picture-in-picture"
       loading="lazy">
     </iframe>
   </div>
 
   <!-- LOCAL VIDEO -->
   <div id="localVideoScreen" class="screen">
-    <video src="videos/waves.mp4" controls autoplay></video>
+    <video src="videos/waves.mp4" controls></video>
   </div>
 
   <!-- RANDOM IMAGES -->
   <div id="randomScreen" class="screen"></div>
 
-  <!-- VERTICAL IMAGE SCREEN -->
+  <!-- VERTICAL ROTATED IMAGES -->
   <div id="verticalScreen">
-    <img src="images/7.jpg">
-    <img src="images/9.jpg">
-    <img src="images/10.jpg">
+    <div class="image-wrapper">
+      <img src="images/7.jpg" class="rotated">
+    </div>
+    <div class="image-wrapper">
+      <img src="images/9.jpg" class="rotated">
+    </div>
+    <div class="image-wrapper">
+      <img src="images/10.jpg" class="rotated">
+    </div>
   </div>
 
   <script>
     const screens = document.querySelectorAll(".screen");
-    const backButton = document.getElementById("backButton");
-
     let currentScreen = "home";
     let historyStack = [];
 
@@ -190,12 +202,12 @@
       document.getElementById(screenId).style.display =
         screenId === "verticalScreen" ? "block" : "flex";
 
-      backButton.style.display =
-        historyStack.length > 0 ? "block" : "none";
+      document.getElementById("backButton").style.display =
+        historyStack.length ? "block" : "none";
     }
 
     function goBack() {
-      if (historyStack.length === 0) return;
+      if (!historyStack.length) return;
 
       const previous = historyStack.pop();
       currentScreen = previous;
@@ -204,8 +216,8 @@
       document.getElementById(previous).style.display =
         previous === "verticalScreen" ? "block" : "flex";
 
-      backButton.style.display =
-        historyStack.length > 0 ? "block" : "none";
+      document.getElementById("backButton").style.display =
+        historyStack.length ? "block" : "none";
     }
 
     function openYouTube() { show("youtubeScreen"); }
@@ -242,7 +254,6 @@
         img.style.top = Math.random() * (window.innerHeight - size) + "px";
 
         document.getElementById("randomScreen").appendChild(img);
-
         requestAnimationFrame(() => img.style.opacity = 1);
 
         setTimeout(() => {
