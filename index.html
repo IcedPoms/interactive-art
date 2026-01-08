@@ -39,25 +39,22 @@
 
     /* BACK BUTTON */
     #backButton {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  font-size: 28px;
-  cursor: pointer;
-  z-index: 1000;
-  user-select: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 1000;
+      user-select: none;
+      background: black;
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,0.3);
+      opacity: 0.75;
+    }
 
-  /* new styling */
-  background: black;
-  padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,0.3);
-  opacity: 0.75;
-}
-
-#backButton:hover {
-  opacity: 1;
-}
-
+    #backButton:hover {
+      opacity: 1;
+    }
 
     /* RANDOM IMAGE SCREEN */
     #randomScreen {
@@ -78,6 +75,43 @@
       max-width: 90vw;
       max-height: 90vh;
     }
+
+    /* ---------- VERTICAL IMAGE SCREEN ---------- */
+    #verticalScreen {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: black;
+    }
+
+    #verticalScreen img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* CUSTOM SCROLLBAR (MATCH BACK BUTTON) */
+    #verticalScreen::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    #verticalScreen::-webkit-scrollbar-track {
+      background: black;
+    }
+
+    #verticalScreen::-webkit-scrollbar-thumb {
+      background: black;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    /* Firefox */
+    #verticalScreen {
+      scrollbar-color: rgba(255,255,255,0.4) black;
+      scrollbar-width: thin;
+    }
   </style>
 </head>
 
@@ -97,7 +131,7 @@
   <div id="secondGrid" class="grid screen">
     <img src="images/4.jpg" onclick="openSpotify()">
     <img src="images/6.jpg" onclick="openLocalVideo()">
-    <img src="images/5.jpg">
+    <img src="images/5.jpg" onclick="openVertical()">
   </div>
 
   <!-- YOUTUBE -->
@@ -131,6 +165,13 @@
   <!-- RANDOM IMAGES -->
   <div id="randomScreen" class="screen"></div>
 
+  <!-- VERTICAL IMAGE SCREEN -->
+  <div id="verticalScreen">
+    <img src="images/7.jpg">
+    <img src="images/9.jpg">
+    <img src="images/10.jpg">
+  </div>
+
   <script>
     const screens = document.querySelectorAll(".screen");
     const backButton = document.getElementById("backButton");
@@ -146,7 +187,8 @@
       currentScreen = screenId;
 
       screens.forEach(s => s.style.display = "none");
-      document.getElementById(screenId).style.display = "flex";
+      document.getElementById(screenId).style.display =
+        screenId === "verticalScreen" ? "block" : "flex";
 
       backButton.style.display =
         historyStack.length > 0 ? "block" : "none";
@@ -159,32 +201,19 @@
       currentScreen = previous;
 
       screens.forEach(s => s.style.display = "none");
-      document.getElementById(previous).style.display = "flex";
+      document.getElementById(previous).style.display =
+        previous === "verticalScreen" ? "block" : "flex";
 
       backButton.style.display =
         historyStack.length > 0 ? "block" : "none";
     }
 
-    function openYouTube() {
-      show("youtubeScreen");
-    }
-
-    function openRandom() {
-      show("randomScreen");
-      startRandomImages();
-    }
-
-    function openSecondGrid() {
-      show("secondGrid");
-    }
-
-    function openSpotify() {
-      show("spotifyScreen");
-    }
-
-    function openLocalVideo() {
-      show("localVideoScreen");
-    }
+    function openYouTube() { show("youtubeScreen"); }
+    function openRandom() { show("randomScreen"); startRandomImages(); }
+    function openSecondGrid() { show("secondGrid"); }
+    function openSpotify() { show("spotifyScreen"); }
+    function openLocalVideo() { show("localVideoScreen"); }
+    function openVertical() { show("verticalScreen"); }
 
     const randomImages = [
       "diary/diary1-1.png",
