@@ -13,7 +13,7 @@
       overflow: hidden;
     }
 
-    /* SCREENS */
+    /* GENERIC SCREENS */
     .screen {
       display: none;
       width: 100vw;
@@ -42,33 +42,31 @@
       position: fixed;
       top: 16px;
       left: 16px;
-      font-size: 28px;
+      font-size: 24px;
       cursor: pointer;
       z-index: 1000;
-      opacity: 0.6;
       display: none;
       user-select: none;
+      background: rgba(0,0,0,0.7);
+      padding: 6px 10px;
+      border-radius: 4px;
     }
 
-    #backButton:hover {
-      opacity: 1;
-    }
-
-    /* RANDOM IMAGE SCREEN */
-    #randomScreen {
+    /* RANDOM IMAGE SCREENS */
+    #randomScreen,
+    #chaosScreen {
       position: relative;
       overflow: hidden;
     }
 
     .popImage {
       position: absolute;
-      max-width: 300px;
-      opacity: 0;
-      transition: opacity 0.3s;
+      max-width: 220px;
+      cursor: pointer;
       image-rendering: pixelated;
+      transition: transform 0.6s, opacity 0.6s;
     }
 
-    /* MEDIA */
     iframe, video {
       max-width: 90vw;
       max-height: 90vh;
@@ -78,144 +76,148 @@
 
 <body>
 
-  <!-- BACK BUTTON -->
+  <!-- BACK -->
   <div id="backButton" onclick="goBack()">←</div>
 
-  <!-- SCREEN 1 -->
+  <!-- HOME -->
   <div id="home" class="grid screen" style="display:flex">
     <img src="images/1.jpg" onclick="openYouTube()">
     <img src="images/2.jpg" onclick="openRandom()">
     <img src="images/3.jpg" onclick="openSecondGrid()">
   </div>
 
-  <!-- SCREEN 2 -->
+  <!-- SECOND GRID -->
   <div id="secondGrid" class="grid screen">
     <img src="images/4.jpg" onclick="openSpotify()">
     <img src="images/6.jpg" onclick="openLocalVideo()">
-    <img src="images/5.jpg">
+    <img src="images/5.jpg" onclick="openThirdGrid()">
   </div>
 
-  <!-- YOUTUBE -->
+  <!-- THIRD GRID -->
+  <div id="thirdGrid" class="grid screen">
+    <img src="images/7.jpg" onclick="openChaos()">
+    <img src="images/9.jpg">
+    <img src="images/10.jpg">
+  </div>
+
+  <!-- SCREENS -->
   <div id="youtubeScreen" class="screen">
-    <iframe
-      src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
+    <iframe src="https://www.youtube.com/embed/Ewt8nDlL_M0?autoplay=1"
+      allow="autoplay" frameborder="0"></iframe>
   </div>
 
-  <!-- SPOTIFY -->
   <div id="spotifyScreen" class="screen">
     <iframe
       style="border-radius:12px"
       src="https://open.spotify.com/embed/playlist/5YVVs5t3cjzjXEfBVbqsyy"
-      width="80%"
-      height="352"
-      frameborder="0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy">
-    </iframe>
+      width="80%" height="352" frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media"></iframe>
   </div>
 
-  <!-- LOCAL VIDEO -->
   <div id="localVideoScreen" class="screen">
     <video src="videos/waves.mp4" controls autoplay></video>
   </div>
 
-  <!-- RANDOM IMAGES -->
   <div id="randomScreen" class="screen"></div>
+  <div id="chaosScreen" class="screen"></div>
 
   <script>
     const screens = document.querySelectorAll(".screen");
     const backButton = document.getElementById("backButton");
-
-    let currentScreen = "home";
     let historyStack = [];
+    let current = "home";
 
-    function show(screenId) {
-      if (currentScreen !== screenId) {
-        historyStack.push(currentScreen);
-      }
-
-      currentScreen = screenId;
+    function show(id) {
+      if (current !== id) historyStack.push(current);
+      current = id;
 
       screens.forEach(s => s.style.display = "none");
-      document.getElementById(screenId).style.display = "flex";
-
-      backButton.style.display =
-        historyStack.length > 0 ? "block" : "none";
+      document.getElementById(id).style.display = "flex";
+      backButton.style.display = historyStack.length ? "block" : "none";
     }
 
     function goBack() {
-      if (historyStack.length === 0) return;
-
-      const previous = historyStack.pop();
-      currentScreen = previous;
-
+      if (!historyStack.length) return;
+      current = historyStack.pop();
       screens.forEach(s => s.style.display = "none");
-      document.getElementById(previous).style.display = "flex";
-
-      backButton.style.display =
-        historyStack.length > 0 ? "block" : "none";
+      document.getElementById(current).style.display = "flex";
+      backButton.style.display = historyStack.length ? "block" : "none";
     }
 
-    function openYouTube() {
-      show("youtubeScreen");
-    }
+    function openYouTube(){ show("youtubeScreen"); }
+    function openRandom(){ show("randomScreen"); }
+    function openSecondGrid(){ show("secondGrid"); }
+    function openThirdGrid(){ show("thirdGrid"); }
+    function openSpotify(){ show("spotifyScreen"); }
+    function openLocalVideo(){ show("localVideoScreen"); }
+    function openChaos(){ show("chaosScreen"); startChaos(); }
 
-    function openRandom() {
-      show("randomScreen");
-      startRandomImages();
-    }
+    /* ---------- CHAOS LOGIC ---------- */
 
-    function openSecondGrid() {
-      show("secondGrid");
-    }
-
-    function openSpotify() {
-      show("spotifyScreen");
-    }
-
-    function openLocalVideo() {
-      show("localVideoScreen");
-    }
-
-    const randomImages = [
-      "diary/diary1-1.png",
-      "diary/diary1-13.jpg",
-      "diary/diary1-25.jpg",
-      "diary/diary1-42.jpg",
-      "diary/diary1-43.jpg",
-      "diary/diary1-50.jpg",
-      "diary/diary1-47.jpg",
-      "diary/diary1-20.jpg"
+    const chaosImages = [
+      "diary/diary1-17.jpg",
+      "diary/diary1-18.jpg",
+      "diary/diary1-5.jpg",
+      "diary/diary1-7.jpg",
+      "diary/diary1-10.jpg",
+      "diary/diary1-11.jpg",
+      "diary/diary1-15.jpg",
+      "diary/diary1-26.jpg",
+      "diary/diary1-27.jpg",
+      "diary/diary1-31.jpg",
+      "diary/diary1-32.jpg",
+      "diary/diary1-33.jpg",
+      "diary/diary1-34.jpg",
+      "diary/diary1-45.jpg",
+      "diary/diary1-39.jpg",
+      "diary/diary1-41.jpg",
+      "diary/diary1-44.jpg"
     ];
 
-    let randomInterval;
+    let chaosPool = [];
+    let chaosCount = 0;
 
-    function startRandomImages() {
-      if (randomInterval) return;
+    function startChaos() {
+      const screen = document.getElementById("chaosScreen");
+      screen.innerHTML = "";
+      chaosPool = [...chaosImages];
+      chaosCount = 0;
+      spawnChaosImage();
+    }
 
-      randomInterval = setInterval(() => {
-        const img = document.createElement("img");
-        img.src = randomImages[Math.floor(Math.random() * randomImages.length)];
-        img.className = "popImage";
+    function spawnChaosImage() {
+      if (!chaosPool.length) chaosPool = [...chaosImages];
 
-        const size = Math.random() * 200 + 100;
-        img.style.width = size + "px";
-        img.style.left = Math.random() * (window.innerWidth - size) + "px";
-        img.style.top = Math.random() * (window.innerHeight - size) + "px";
+      const src = chaosPool.splice(Math.floor(Math.random() * chaosPool.length),1)[0];
+      const img = document.createElement("img");
+      img.src = src;
+      img.className = "popImage";
 
-        document.getElementById("randomScreen").appendChild(img);
+      img.style.left = Math.random() * 80 + "%";
+      img.style.top = Math.random() * 80 + "%";
 
-        requestAnimationFrame(() => img.style.opacity = 1);
+      img.onclick = () => chaosDeath(img);
 
-        setTimeout(() => {
-          img.style.opacity = 0;
-          setTimeout(() => img.remove(), 300);
-        }, 3000);
-      }, 800);
+      document.getElementById("chaosScreen").appendChild(img);
+      chaosCount++;
+
+      if (chaosCount > 25) {
+        setTimeout(startChaos, 800);
+      }
+    }
+
+    function chaosDeath(img) {
+      const type = Math.floor(Math.random() * 4);
+
+      if (type === 0) img.style.transform = "scale(0)";
+      if (type === 1) img.style.transform = "translateX(200vw)";
+      if (type === 2) img.style.transform = "rotate(720deg) scale(0)";
+      if (type === 3) img.style.opacity = 0;
+
+      setTimeout(() => img.remove(), 600);
+
+      spawnChaosImage();
+      spawnChaosImage();
     }
   </script>
 
